@@ -65,9 +65,15 @@
   <ItemGroup>
     <Compile Include="Assets\Camera_Positioning.cs" />
     <Compile Include="Assets\Enemy_Behavior.cs" />
+    <Compile Include="Assets\Enemy_Health.cs" />
+    <Compile Include="Assets\Enemy_Movement.cs" />
+    <Compile Include="Assets\Enemy_Vision.cs" />
     <Compile Include="Assets\Game_Manager.cs" />
     <Compile Include="Assets\Health.cs" />
+    <Compile Include="Assets\Movement.cs" />
+    <Compile Include="Assets\Player_Attack.cs" />
     <Compile Include="Assets\Player_Control.cs" />
+    <Compile Include="Assets\Player_Health.cs" />
     <Compile Include="Assets\Player_Movement.cs" />
     <Compile Include="Assets\Player_Respawn.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">

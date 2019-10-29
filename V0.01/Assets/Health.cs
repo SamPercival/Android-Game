@@ -2,41 +2,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour
+abstract public class Health : MonoBehaviour
 {
     public int health;
     public LayerMask killZoneDef;
+    public float defaultDamageTimer;
+
+    private bool died = false;
+    private float damageTimer = 0;
+    
     private void Update()
     {
+        if (damageTimer > 0)
+        {
+            damageTimer -= Time.deltaTime;
+        }
         if (health <= 0)
         {
+            died = true;
             Died();
         }
-        Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, 0.1f, killZoneDef);
-        foreach (Collider2D col in collisions)
+        if (!died)
         {
-            if (col.gameObject != gameObject)
+            Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, 0.1f, killZoneDef);
+            foreach (Collider2D col in collisions)
             {
-                Kill();
-                break;
+                if (col.gameObject != gameObject)
+                {
+                    Kill();
+                    break;
+                }
             }
         }
+        
     }
-    public void TakeDamage(int dmg)
+    public virtual void TakeDamage(int dmg)
     {
-        health -= dmg;
+        if (damageTimer <= 0)
+        {
+            health -= dmg;
+            damageTimer = defaultDamageTimer;
+        }
+        
     }
 
     public void Heal(int heal)
     {
+        Debug.Log("Heal");
         health += heal;
     }
 
-    void Died()
-    {
-        Debug.Log("Died");
-        FindObjectOfType<Game_Manager>().GameOver();
-    }
+    public abstract void Died();
 
     void Kill()
     {
