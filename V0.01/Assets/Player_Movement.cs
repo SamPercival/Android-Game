@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Player_Movement : Movement
 {
+    public Game_Manager gm;
+    private void Start()
+    {
+        transform.position = gm.GetRespawn();
+    }
     // Update is called once per frame
     void FixedUpdate()
     {

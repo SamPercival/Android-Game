@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Camera_Positioning.cs" />
+    <Compile Include="Assets\Checkpoint.cs" />
     <Compile Include="Assets\Enemy_Behavior.cs" />
     <Compile Include="Assets\Enemy_Health.cs" />
     <Compile Include="Assets\Enemy_Movement.cs" />

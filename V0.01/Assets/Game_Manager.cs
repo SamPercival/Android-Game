@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class Game_Manager : MonoBehaviour
 {
     private bool gameEnded = false;
-    private Vector3 respawn;
+    private static Vector3 respawn;
     public void GameOver()
     {
         if (!gameEnded)
@@ -19,12 +19,17 @@ public class Game_Manager : MonoBehaviour
     void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        Debug.Log(respawn);
-        FindObjectOfType<Player_Movement>().transform.position = respawn;
+        //FindObjectOfType<Player_Respawn>().Respawn(respawn);
     }
 
     public void SetRespawn(Vector3 pos)
     {
         respawn = pos;
+        Debug.Log("set");
+    }
+
+    public Vector3 GetRespawn()
+    {
+        return respawn;
     }
 }

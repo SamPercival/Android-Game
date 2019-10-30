@@ -7,6 +7,7 @@ public class Enemy_Movement : Movement
     private Vector3 startingPos;
     private float offset = 5;
     private bool movingRight = true;
+    private float speed = 0.5f;
 
     private void Start()
     {
@@ -26,8 +27,21 @@ public class Enemy_Movement : Movement
         return false;
     }
 
+    private void MoveInDirection()
+    {
+        if (movingRight)
+        {
+            Move(speed);
+        }
+        else
+        {
+            Move(-speed);
+        }
+    }
+
     public void Passive()
     {
+        speed = 0.5f;
         if (!EdgeCheck())
         {
             movingRight = !movingRight;
@@ -43,15 +57,19 @@ public class Enemy_Movement : Movement
                 movingRight = true;
             }
         }
+        MoveInDirection();
+    }
 
-
-        if (movingRight)
+    public void Aggresive()
+    {
+        speed = 0.7f;
+        if (EdgeCheck())
         {
-            Move(0.5f);
+            MoveInDirection();
         }
         else
         {
-            Move(-0.5f);
+            Move(0);
         }
     }
 }

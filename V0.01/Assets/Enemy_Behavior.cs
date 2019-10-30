@@ -13,6 +13,7 @@ public class Enemy_Behavior : MonoBehaviour
         if (aggresive)
         {
             Debug.Log("ANGRY");
+            movement.Aggresive();
         }
         else
         {
