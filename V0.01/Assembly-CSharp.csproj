@@ -63,20 +63,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Camera_Positioning.cs" />
-    <Compile Include="Assets\Checkpoint.cs" />
-    <Compile Include="Assets\Enemy_Behavior.cs" />
-    <Compile Include="Assets\Enemy_Health.cs" />
-    <Compile Include="Assets\Enemy_Movement.cs" />
-    <Compile Include="Assets\Enemy_Vision.cs" />
-    <Compile Include="Assets\Game_Manager.cs" />
-    <Compile Include="Assets\Health.cs" />
-    <Compile Include="Assets\Movement.cs" />
-    <Compile Include="Assets\Player_Attack.cs" />
-    <Compile Include="Assets\Player_Control.cs" />
-    <Compile Include="Assets\Player_Health.cs" />
-    <Compile Include="Assets\Player_Movement.cs" />
-    <Compile Include="Assets\Player_Respawn.cs" />
+    <Compile Include="Assets\Enemy_Attack.cs" />
+    <Compile Include="Assets\Scripts\Camera_Positioning.cs" />
+    <Compile Include="Assets\Scripts\Checkpoint.cs" />
+    <Compile Include="Assets\Scripts\Enemy_Behavior.cs" />
+    <Compile Include="Assets\Scripts\Enemy_Health.cs" />
+    <Compile Include="Assets\Scripts\Enemy_Movement.cs" />
+    <Compile Include="Assets\Scripts\Enemy_Vision.cs" />
+    <Compile Include="Assets\Scripts\Game_Manager.cs" />
+    <Compile Include="Assets\Scripts\Health.cs" />
+    <Compile Include="Assets\Scripts\Movement.cs" />
+    <Compile Include="Assets\Scripts\Player_Attack.cs" />
+    <Compile Include="Assets\Scripts\Player_Control.cs" />
+    <Compile Include="Assets\Scripts\Player_Health.cs" />
+    <Compile Include="Assets\Scripts\Player_Movement.cs" />
+    <Compile Include="Assets\Scripts\Player_Respawn.cs" />
+    <Compile Include="Assets\UI_Health.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>E:/AndroidGame/Android-Game/V0.01/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
