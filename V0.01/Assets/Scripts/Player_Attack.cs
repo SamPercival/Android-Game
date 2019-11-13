@@ -48,7 +48,7 @@ public class Player_Attack : MonoBehaviour
         {
             Debug.Log("Heavy");
             attackCountdown = heavyAttackWaitTime;
-            Collider2D[] enemies = Physics2D.OverlapAreaAll(heavyAttackCorner0,heavyAttackCorner1);
+            Collider2D[] enemies = Physics2D.OverlapAreaAll(heavyAttackCorner0,heavyAttackCorner1, enemyDef);
             foreach (Collider2D enemy in enemies)
             {
                 enemy.GetComponent<Health>().TakeDamage(hDmg);

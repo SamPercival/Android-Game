@@ -7,7 +7,7 @@ public class Enemy_Movement : Movement
     private Vector3 startingPos;
     private float offset = 5;
     private bool movingRight = true;
-    private float speed = 0.5f;
+    private float speed = 0.3f;
 
     private void Start()
     {
@@ -41,7 +41,7 @@ public class Enemy_Movement : Movement
 
     public void Passive()
     {
-        speed = 0.5f;
+        speed = 0.3f;
         if (!EdgeCheck())
         {
             movingRight = !movingRight;
