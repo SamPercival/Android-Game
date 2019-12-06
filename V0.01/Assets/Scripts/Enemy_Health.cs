@@ -9,7 +9,7 @@ public class Enemy_Health : Health
         Destroy(gameObject);
     }
 
-    public override void TakeDamage(int dmg)
+    public override void TakeDamage(float dmg)
     {
         //effects
         base.TakeDamage(dmg);

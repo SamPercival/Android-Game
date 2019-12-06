@@ -19,7 +19,6 @@ public class Game_Manager : MonoBehaviour
     void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        //FindObjectOfType<Player_Respawn>().Respawn(respawn);
     }
 
     public void SetRespawn(Vector3 pos)

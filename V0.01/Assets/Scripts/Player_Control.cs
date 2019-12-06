@@ -11,14 +11,7 @@ public class Player_Control : MonoBehaviour
     {
         float xAxis = Input.GetAxisRaw("Horizontal");
         mover.Move(xAxis);
-
-        if (Input.GetKey("k"))
-        {
-            attacker.lightAttack();
-        }
-        else if (Input.GetKey("l"))
-        {
-            attacker.heavyAttack();
-        }
+        attacker.AttackDecider();
+        
     }
 }

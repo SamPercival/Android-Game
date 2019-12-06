@@ -11,12 +11,14 @@ public class Movement : MonoBehaviour
     public Transform groundCheck;
 
     private Vector3 targetVel;
-    private Vector3 vel = Vector3.zero;
+    protected Vector3 vel = Vector3.zero;
     private bool facingRight = true;
     protected bool grounded = false;
     protected float groundCheckRadius = 0.2f;
-    protected const float jumpTimeLimit = 0.05f;
+    protected const float jumpTimeLimit = 0.04f;
     protected float jumpTimer = 0;
+
+    protected float disabled = 0;
 
     public bool CheckIfGrounded()
     {
@@ -33,18 +35,23 @@ public class Movement : MonoBehaviour
 
     public void Move(float move)
     {
-        targetVel = new Vector3(move * 20.0f, rb.velocity.y, 0);
-        rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVel, ref vel, smoothness);
+        if (disabled <= 0)
+        {
+            targetVel = new Vector3(move * 20.0f, rb.velocity.y, 0);
+            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVel, ref vel, smoothness);
 
-        if (facingRight && move < 0)
-        {
-            Flip();
-        }
-        else if (!facingRight && move > 0)
-        {
-            Flip();
+            if (facingRight && move < 0)
+            {
+                Flip();
+            }
+            else if (!facingRight && move > 0)
+            {
+                Flip();
+            }
         }
     }
+
+    
 
     void Flip()
     {

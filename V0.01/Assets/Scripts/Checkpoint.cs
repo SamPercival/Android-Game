@@ -8,6 +8,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            Debug.Log("Triggered");
             FindObjectOfType<Game_Manager>().SetRespawn(transform.position);
         }
     }

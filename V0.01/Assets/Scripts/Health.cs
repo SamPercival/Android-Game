@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,11 +37,11 @@ abstract public class Health : MonoBehaviour
         }
         
     }
-    public virtual void TakeDamage(int dmg)
+    public virtual void TakeDamage(float dmg)
     {
         if (damageTimer <= 0)
         {
-            health -= dmg;
+            health -= (int)dmg;
             damageTimer = defaultDamageTimer;
         }
         
