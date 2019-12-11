@@ -16,32 +16,35 @@ public class Player_Movement : Movement
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (dashTimer > 0) { dashTimer -= Time.deltaTime; }
-        if (disabled > 0) { disabled -= Time.deltaTime; }
-        grounded = CheckIfGrounded();
-        if (rb.velocity.y <= 0)
+        if (stunTimer <= 0)
         {
-            rb.gravityScale = 6;
-        }
+            if (dashTimer > 0) { dashTimer -= Time.deltaTime; }
+            if (disabled > 0) { disabled -= Time.deltaTime; }
+            grounded = CheckIfGrounded();
+            if (rb.velocity.y <= 0)
+            {
+                rb.gravityScale = 50;
+            }
 
-        if (Input.GetKey(KeyCode.Space) && grounded)
-        {
-            rb.gravityScale = 4;
-            jumpTimer = jumpTimeLimit;
-            rb.AddForce(new Vector2(0, jumpForce));
-            
-        }
-        else if (jumpTimer > 0 && Input.GetKey(KeyCode.Space))
-        {
-            jumpTimer -= Time.deltaTime;
-            rb.AddForce(new Vector2(0, jumpForce));
+            if (Input.GetKey(KeyCode.Space) && grounded)
+            {
+                rb.gravityScale = 20;
+                jumpTimer = jumpTimeLimit;
+                rb.AddForce(new Vector2(0, jumpForce));
+
+            }
+            else if (jumpTimer > 0 && Input.GetKey(KeyCode.Space))
+            {
+                jumpTimer -= Time.deltaTime;
+                rb.AddForce(new Vector2(0, jumpForce));
+            }
         }
         DoDash();
     }
 
     public void Dash(float dist)
     {
-        if (dashTimer <= 0)
+        if (dashTimer <= 0 && stunTimer <= 0)
         {
             dashTimer = 0.5f;
             dashTarget = transform.position + new Vector3(dist - 2, 0, 0);

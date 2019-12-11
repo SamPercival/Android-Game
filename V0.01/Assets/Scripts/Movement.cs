@@ -19,6 +19,17 @@ public class Movement : MonoBehaviour
     protected float jumpTimer = 0;
 
     protected float disabled = 0;
+    private bool inCombat = false;
+
+    protected float stunTimer = 0;
+
+    private void FixedUpdate()
+    {
+        if (stunTimer > 0)
+        {
+            stunTimer -= Time.deltaTime;
+        }
+    }
 
     public bool CheckIfGrounded()
     {
@@ -35,30 +46,67 @@ public class Movement : MonoBehaviour
 
     public void Move(float move)
     {
-        if (disabled <= 0)
+        if (disabled <= 0 && stunTimer <= 0)
         {
-            targetVel = new Vector3(move * 20.0f, rb.velocity.y, 0);
+            targetVel = new Vector3(move * 200.0f, rb.velocity.y, 0);
             rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVel, ref vel, smoothness);
-
-            if (facingRight && move < 0)
+            if (!inCombat)
             {
-                Flip();
-            }
-            else if (!facingRight && move > 0)
-            {
-                Flip();
+                if (facingRight && move < 0)
+                {
+                    Flip();
+                }
+                else if (!facingRight && move > 0)
+                {
+                    Flip();
+                }
             }
         }
     }
 
     
 
-    void Flip()
+    private void Flip()
     {
-        facingRight = !facingRight;
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
+        if (grounded)
+        {
+            facingRight = !facingRight;
+            Vector3 scale = transform.localScale;
+            scale.x *= -1;
+            transform.localScale = scale;
+        }
+    }
+
+    public void FaceNearestEnemy(bool faceRight)
+    {
+        if (facingRight && !faceRight)
+        {
+            Flip();
+        }
+        else if (!facingRight && faceRight)
+        {
+            Flip();
+        }
+    }
+
+    public void Stun(float stunTime)
+    {
+        stunTimer = stunTime;
+    }
+
+    public void KnockUp(float xForce, float yForce)
+    {
+        rb.velocity = new Vector2(xForce, yForce);
+    }
+
+    public void SetInCombat(bool val)
+    {
+        inCombat = val;
+    }
+
+    public bool GetFacingRight()
+    {
+        return facingRight;
     }
 
 }

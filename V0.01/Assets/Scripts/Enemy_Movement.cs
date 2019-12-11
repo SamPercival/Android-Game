@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy_Movement : Movement
 {
     private Vector3 startingPos;
-    private float offset = 5;
+    private float offset = 50;
     private bool movingRight = true;
     private float speed = 0.3f;
 
