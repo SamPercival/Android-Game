@@ -16,11 +16,12 @@ public class Player_Movement : Movement
     // Update is called once per frame
     void FixedUpdate()
     {
+        grounded = CheckIfGrounded();
         if (stunTimer <= 0)
         {
             if (dashTimer > 0) { dashTimer -= Time.deltaTime; }
             if (disabled > 0) { disabled -= Time.deltaTime; }
-            grounded = CheckIfGrounded();
+            
             if (rb.velocity.y <= 0)
             {
                 rb.gravityScale = 50;

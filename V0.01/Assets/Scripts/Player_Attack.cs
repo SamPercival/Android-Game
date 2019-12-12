@@ -91,18 +91,32 @@ public class Player_Attack : MonoBehaviour
     public void LightDown()
     {
         //Small radial sweep all around (no damage)
+        attackCountdown = lightAttackWaitTime;
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, lightAttackRadius, enemyDef);
+        foreach (Collider2D enemy in enemies)
+        {
+            enemy.GetComponent<Enemy_Movement>().KnockDown();
+        }
     }
 
     public void HeavyDown()
     {
         //Crouches and kicks in direction facing, knocking over enemy
+        attackCountdown = heavyAttackWaitTime;
+        Vector2 heavyAttackCorner2 = new Vector2(transform.position.x + (base.transform.localScale.x / 2) + heavyAttackXSize, (transform.position.y + heavyAttackYSize / 2)/2);
+        Collider2D[] enemies = Physics2D.OverlapAreaAll(heavyAttackCorner0, heavyAttackCorner2, enemyDef);
+        foreach (Collider2D enemy in enemies)
+        {
+            enemy.GetComponent<Enemy_Movement>().KnockDown();
+            enemy.GetComponent<Health>().TakeDamage(hDmgMult * dmg);
+        }
     }
 
     public void AttackDecider()
     {
         if (attackCountdown <= 0)
         {
-            float xAxis = Input.GetAxisRaw("Horizontal");
+            //float xAxis = Input.GetAxisRaw("Horizontal");
             float yAxis = Input.GetAxisRaw("Vertical");
             int key = 0;
             
@@ -131,7 +145,14 @@ public class Player_Attack : MonoBehaviour
             else if (yAxis < -xAxisAttackThreshold)
             {
                 Debug.Log("Down Attack");
-                //Down attack
+                if (key == 1)
+                {
+                    LightDown();
+                }
+                else if (key == 2)
+                {
+                    HeavyDown();
+                }
             }
             else
             {
@@ -180,7 +201,6 @@ public class Player_Attack : MonoBehaviour
         }
         else
         {
-            Debug.Log("Out of Combat");
             pm.SetInCombat(false);
         }
         

@@ -14,6 +14,13 @@ public class Enemy_Movement : Movement
         startingPos = transform.position;
     }
 
+    private void FixedUpdate()
+    {
+        grounded = CheckIfGrounded();
+        Debug.Log("Disabled" + disabled);
+        Debug.Log("Stun" + stunTimer);
+        Debug.Log("Grounded" + grounded);
+    }
     bool EdgeCheck()
     {
         Collider2D[] collisions = Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius, groundDef);
@@ -41,6 +48,7 @@ public class Enemy_Movement : Movement
 
     public void Passive()
     {
+        inCombat = false;
         speed = 0.3f;
         if (!EdgeCheck())
         {
@@ -62,6 +70,7 @@ public class Enemy_Movement : Movement
 
     public void Aggresive()
     {
+        inCombat = true;
         speed = 0.7f;
         if (EdgeCheck())
         {
