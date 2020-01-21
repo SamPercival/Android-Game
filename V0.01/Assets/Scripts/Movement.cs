@@ -12,7 +12,7 @@ public class Movement : MonoBehaviour
 
     private Vector3 targetVel;
     protected Vector3 vel = Vector3.zero;
-    private bool facingRight = true; //Is entity facing right
+    protected bool facingRight = true; //Is entity facing right
     protected bool grounded = false; //Is the entity on the ground
     protected float groundCheckRadius = 0.2f;
     protected const float jumpTimeLimit = 0.04f; //How long the player can hold the jump button
@@ -22,12 +22,17 @@ public class Movement : MonoBehaviour
     protected bool inCombat = false; //Is the entity in combat
 
     protected float stunTimer = 0; //How long the entity is stunned for
-
-    private void FixedUpdate()
+    private bool knockedDown = false;
+    protected void FixedUpdate()
     {
         if (stunTimer > 0)
         {
             stunTimer -= Time.deltaTime;
+        }
+        else if (knockedDown)
+        {
+            knockedDown = false;
+            transform.Rotate(0, 0, -90);
         }
         
     }
@@ -101,13 +106,15 @@ public class Movement : MonoBehaviour
 
     //Knocks the entity into the air with the forces given in the parameters
     public void KnockUp(float xForce, float yForce)
-    {
+    {   
         rb.velocity = new Vector2(xForce, yForce);
+        Debug.Log(rb.velocity);
     }
 
     //Knocks the entity over, stunning them for a short time
     public void KnockDown()
     {
+        knockedDown = true;
         Stun(0.9f);
         transform.Rotate(new Vector3(0, 0, 90));
         //Knock down animation

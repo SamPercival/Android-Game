@@ -9,19 +9,24 @@ public class Player_Movement : Movement
     public float dashLength;
     private bool dashing = false;
     private Vector3 dashTarget;
+    public sbyte dashSpeed;
+    private sbyte dashesInAir = 1;
+    private sbyte dashesDoneInAir = 0;
     private void Start()
     {
         transform.position = gm.GetRespawn();
     }
     // Update is called once per frame
-    void FixedUpdate()
+    new private void FixedUpdate()
     {
         grounded = CheckIfGrounded();
+        if (grounded) { dashesDoneInAir = 0; }
         if (stunTimer <= 0)
         {
             if (dashTimer > 0) { dashTimer -= Time.deltaTime; }
             if (disabled > 0) { disabled -= Time.deltaTime; }
-            
+            else { dashing = false; }
+
             if (rb.velocity.y <= 0)
             {
                 rb.gravityScale = 50;
@@ -43,12 +48,21 @@ public class Player_Movement : Movement
         DoDash();
     }
 
-    public void Dash(float dist)
+    public void Dash(float xAxis)
     {
-        if (dashTimer <= 0 && stunTimer <= 0)
+        
+        if (dashTimer <= 0 && stunTimer <= 0 && dashesDoneInAir < dashesInAir)
         {
-            dashTimer = 0.5f;
-            dashTarget = transform.position + new Vector3(dist - 2, 0, 0);
+            if (!grounded) { dashesDoneInAir++; }
+            dashTimer = 1.0f;
+            disabled = 0.4f;
+            if (xAxis > 0) { dashTarget = transform.position + new Vector3(dashLength, 0, 0); }
+            else if (xAxis < 0) { dashTarget = transform.position - new Vector3(dashLength, 0, 0); }
+            else
+            {
+                if (facingRight) { dashTarget = transform.position + new Vector3(dashLength, 0, 0); }
+                else { dashTarget = transform.position - new Vector3(dashLength, 0, 0); }
+            }
             dashing = true;
         }
 
@@ -58,7 +72,8 @@ public class Player_Movement : Movement
     {
         if (dashing)
         {
-            Vector3 location = Vector3.MoveTowards(transform.position, dashTarget, 1);
+            Vector3 current = transform.position;
+            Vector3 location = Vector3.MoveTowards(transform.position, dashTarget, dashSpeed);
             rb.MovePosition(location);
             if (dashTarget == location)
             {

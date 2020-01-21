@@ -14,12 +14,13 @@ public class Enemy_Movement : Movement
         startingPos = transform.position;
     }
 
-    private void FixedUpdate()
+    new private void FixedUpdate()
     {
+        base.FixedUpdate();
         grounded = CheckIfGrounded();
-        Debug.Log("Disabled" + disabled);
+/*        Debug.Log("Disabled" + disabled);
         Debug.Log("Stun" + stunTimer);
-        Debug.Log("Grounded" + grounded);
+        Debug.Log("Grounded" + grounded);*/
     }
     bool EdgeCheck()
     {

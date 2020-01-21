@@ -8,16 +8,9 @@ public class Player_Attack : MonoBehaviour
     public float fwdAttkDist;
     public Transform pos;
 
-    public float lightAttackWaitTime;
-    public float lightAttackRadius;
-    public float lDmgMult;
-
-    public float heavyAttackWaitTime;
-    public float heavyAttackXSize;
-    public float heavyAttackYSize;
-    private Vector2 heavyAttackCorner0;
-    private Vector2 heavyAttackCorner1;
-    public float hDmgMult;
+    public float attackWaitTime;
+    public float attackRadius;
+    public float dmgMult;
 
     public LayerMask enemyDef;
     private float attackCountdown = 0;
@@ -28,8 +21,6 @@ public class Player_Attack : MonoBehaviour
     public Player_Movement pm;
     private void FixedUpdate()
     {
-        heavyAttackCorner0 = new Vector2(transform.position.x + base.transform.localScale.x / 2 -7.0f, transform.position.y - heavyAttackYSize / 2);
-        heavyAttackCorner1 = new Vector2(transform.position.x + (base.transform.localScale.x / 2) + heavyAttackXSize, transform.position.y + heavyAttackYSize / 2);
         if (attackCountdown > 0)
         {
             attackCountdown -= Time.deltaTime;
@@ -37,78 +28,37 @@ public class Player_Attack : MonoBehaviour
         FaceNearestEnemy();
     }
 
-    public void LightAttack()
+    public void Attack()
     {
-        Debug.Log("Light");
-        attackCountdown = lightAttackWaitTime;
-        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, lightAttackRadius, enemyDef);
+        attackCountdown = attackWaitTime;
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, attackRadius, enemyDef);
         foreach (Collider2D enemy in enemies)
         {
-            enemy.GetComponent<Health>().TakeDamage(lDmgMult * dmg);
+            enemy.GetComponent<Health>().TakeDamage(dmgMult * dmg);
         }
     }
 
-    public void HeavyAttack()
-    {
-        Debug.Log("Heavy");
-        attackCountdown = heavyAttackWaitTime;
-        Collider2D[] enemies = Physics2D.OverlapAreaAll(heavyAttackCorner0,heavyAttackCorner1, enemyDef);
-        foreach (Collider2D enemy in enemies)
-        {
-            enemy.GetComponent<Health>().TakeDamage(hDmgMult * dmg);
-        }
-    }
-
-    public void LightUp()
+    public void AttackUp()
     {
         //Small stun on enemy in direction facing
-        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, lightAttackRadius, enemyDef);
+        attackCountdown = attackWaitTime;
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, attackRadius, enemyDef);
         foreach (Collider2D enemy in enemies)
         {
-            enemy.GetComponent<Enemy_Movement>().Stun(1.0f);
+            enemy.GetComponent<Enemy_Movement>().KnockUp(10.0f,100.0f);
         }
-        LightAttack();
+        Attack();
     }
 
-    public void HeavyUp()
-    {
-        //Knocks up enemy in direction facing
-        Collider2D[] enemies = Physics2D.OverlapAreaAll(heavyAttackCorner0, heavyAttackCorner1, enemyDef);
-        foreach (Collider2D enemy in enemies)
-        {
-            if (pm.GetFacingRight())
-            {
-                enemy.GetComponent<Enemy_Movement>().KnockUp(5, 200);
-            }
-            else
-            {
-                enemy.GetComponent<Enemy_Movement>().KnockUp(-5, 200);
-            }
-        }
-        HeavyAttack();
-    }
-
-    public void LightDown()
+    public void AttackDown()
     {
         //Small radial sweep all around (no damage)
-        attackCountdown = lightAttackWaitTime;
-        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, lightAttackRadius, enemyDef);
+        attackCountdown = attackWaitTime;
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, attackRadius, enemyDef);
+        Debug.Log(enemies);
         foreach (Collider2D enemy in enemies)
         {
             enemy.GetComponent<Enemy_Movement>().KnockDown();
-        }
-    }
-
-    public void HeavyDown()
-    {
-        //Crouches and kicks in direction facing, knocking over enemy
-        attackCountdown = heavyAttackWaitTime;
-        Vector2 heavyAttackCorner2 = new Vector2(transform.position.x + (base.transform.localScale.x / 2) + heavyAttackXSize, (transform.position.y + heavyAttackYSize / 2)/2);
-        Collider2D[] enemies = Physics2D.OverlapAreaAll(heavyAttackCorner0, heavyAttackCorner2, enemyDef);
-        foreach (Collider2D enemy in enemies)
-        {
-            enemy.GetComponent<Enemy_Movement>().KnockDown();
-            enemy.GetComponent<Health>().TakeDamage(hDmgMult * dmg);
         }
     }
 
@@ -116,54 +66,22 @@ public class Player_Attack : MonoBehaviour
     {
         if (attackCountdown <= 0)
         {
-            //float xAxis = Input.GetAxisRaw("Horizontal");
             float yAxis = Input.GetAxisRaw("Vertical");
-            int key = 0;
-            
-            if (Input.GetKey("k"))
-            {
-                key = 1;
-            }
-            else if (Input.GetKey("l"))
-            {
-                key = 2;
-            }
 
             if (yAxis > yAxisAttackThreshold)
             {
                 Debug.Log("Up Attack");
-                if (key == 1)
-                {
-                    LightUp();
-                }
-                else if (key == 2)
-                {
-                    HeavyUp();
-                }
-
+                AttackUp();
             }
             else if (yAxis < -xAxisAttackThreshold)
             {
                 Debug.Log("Down Attack");
-                if (key == 1)
-                {
-                    LightDown();
-                }
-                else if (key == 2)
-                {
-                    HeavyDown();
-                }
+                AttackDown();
             }
             else
             {
-                if (key == 1)
-                {
-                    LightAttack();
-                }
-                else if (key == 2)
-                {
-                    HeavyAttack();
-                }
+                Debug.Log("Attack");
+                Attack();
             }
         }
     }
@@ -187,8 +105,8 @@ public class Player_Attack : MonoBehaviour
         }
         if (distL < float.PositiveInfinity || distR < float.PositiveInfinity)
         {
-            Debug.Log(distL);
-            Debug.Log(distR);
+            //Debug.Log(distL);
+            //Debug.Log(distR);
             pm.SetInCombat(true);
             if (distL >= distR)
             {
@@ -209,11 +127,6 @@ public class Player_Attack : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, lightAttackRadius);
-        heavyAttackCorner0 = new Vector2(transform.position.x + base.transform.localScale.x / 2 -7.0f, transform.position.y - heavyAttackYSize / 2);
-        heavyAttackCorner1 = new Vector2(transform.position.x + (base.transform.localScale.x / 2) + heavyAttackXSize, transform.position.y + heavyAttackYSize/2);
-        Vector3 v1 = new Vector3(heavyAttackCorner0.x, heavyAttackCorner0.y, 0);
-        Vector3 v2 = new Vector3(heavyAttackCorner1.x, heavyAttackCorner1.y, 0);
-        Gizmos.DrawLine(v1, v2);
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
     }
 }
