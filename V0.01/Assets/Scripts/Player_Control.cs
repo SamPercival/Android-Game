@@ -10,7 +10,7 @@ public class Player_Control : MonoBehaviour
     private void FixedUpdate()
     {
         float xAxis = Input.GetAxisRaw("Horizontal");
-        mover.Move(xAxis);
+        //mover.Move(xAxis);
         if (Input.GetKey("k")){
             attacker.AttackDecider();
         }

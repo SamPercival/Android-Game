@@ -1,21 +1,27 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
     public Rigidbody2D rb;
-    public float smoothness; //How quick acceleration is
     public float jumpForce; //How much force is applied to make entity jump
     public LayerMask groundDef; //What classifies as ground to the ground checker
     public Transform groundCheck;
+    public float accelceration;
+    public float speedMax;
+    public Transform rayPos;
+    public LayerMask rayLM;
 
+    private float groundSpeed = 0;
     private Vector3 targetVel;
+    private float xSpeed = 0, ySpeed = 0;
     protected Vector3 vel = Vector3.zero;
     protected bool facingRight = true; //Is entity facing right
     protected bool grounded = false; //Is the entity on the ground
-    protected float groundCheckRadius = 0.2f;
-    protected const float jumpTimeLimit = 0.04f; //How long the player can hold the jump button
+    protected float groundCheckRadius = 0.3f;
+    protected const float jumpTimeLimit = 0.22f; //How long the player can hold the jump button
     protected float jumpTimer = 0;
 
     protected float disabled = 0; //How long character movement is disabled for
@@ -54,20 +60,58 @@ public class Movement : MonoBehaviour
     //Move the entity smoothly in a direction
     public void Move(float move)
     {
-        if (disabled <= 0 && stunTimer <= 0)
+        if ((move < -0.35 || move > 0.35) && groundSpeed < speedMax && disabled <= 0 && stunTimer <= 0)
         {
-            targetVel = new Vector3(move * 200.0f, rb.velocity.y, 0);
-            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVel, ref vel, smoothness);
-            if (!inCombat)
+            groundSpeed += accelceration;
+        }
+        else if (groundSpeed > 0)
+        {
+            
+            groundSpeed -= accelceration;
+        }
+        else
+        {
+            groundSpeed = 0;
+        }
+
+        RaycastHit2D rayHit;
+        rayHit = Physics2D.Raycast(rayPos.position, new Vector2(1, 0), 1, rayLM);
+        Debug.DrawRay(rayPos.position, new Vector2(1, 0), Color.red, 3.0f);
+        float slopeAngle = 0;
+        if (rayHit.collider != null)
+        {
+            slopeAngle = Vector2.Angle(rayHit.normal, Vector2.up);
+            Debug.Log(slopeAngle);
+        }
+        if (slopeAngle < 45)
+        {
+            ySpeed = groundSpeed * (float)Math.Sin(slopeAngle);
+            if (move < 0)
             {
-                if (facingRight && move < 0)
-                {
-                    Flip();
-                }
-                else if (!facingRight && move > 0)
-                {
-                    Flip();
-                }
+                xSpeed = -groundSpeed * (float)Math.Cos(slopeAngle);
+            }
+            else if (move > 0)
+            {
+                xSpeed = groundSpeed * (float)Math.Cos(slopeAngle);
+            }
+            else
+            {
+                if (rb.velocity.x > 0) {xSpeed = groundSpeed * (float)Math.Cos(slopeAngle);}
+                else if (rb.velocity.x > 0) {xSpeed = -groundSpeed * (float)Math.Cos(slopeAngle);}
+            }
+            rb.velocity = new Vector2(xSpeed, rb.velocity.y + ySpeed);
+        }
+        
+
+        if (!inCombat)
+        {
+            if (facingRight && move < 0)
+            {
+                Flip();
+            }
+            else if (!facingRight && move > 0)
+            {
+                Flip();
             }
         }
     }

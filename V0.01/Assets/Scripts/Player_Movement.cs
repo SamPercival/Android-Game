@@ -34,7 +34,7 @@ public class Player_Movement : Movement
 
             if (Input.GetKey(KeyCode.Space) && grounded)
             {
-                rb.gravityScale = 20;
+                rb.gravityScale = 50;
                 jumpTimer = jumpTimeLimit;
                 rb.AddForce(new Vector2(0, jumpForce));
 
@@ -42,10 +42,11 @@ public class Player_Movement : Movement
             else if (jumpTimer > 0 && Input.GetKey(KeyCode.Space))
             {
                 jumpTimer -= Time.deltaTime;
-                rb.AddForce(new Vector2(0, jumpForce));
+                rb.velocity = new Vector2(rb.velocity.x, 150);
             }
         }
         DoDash();
+        Move(Input.GetAxisRaw("Horizontal"));
     }
 
     public void Dash(float xAxis)

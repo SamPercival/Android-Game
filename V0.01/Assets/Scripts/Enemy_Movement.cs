@@ -50,7 +50,7 @@ public class Enemy_Movement : Movement
     public void Passive()
     {
         inCombat = false;
-        speed = 0.3f;
+        speed = 1.0f;
         if (!EdgeCheck())
         {
             movingRight = !movingRight;
@@ -72,7 +72,7 @@ public class Enemy_Movement : Movement
     public void Aggresive()
     {
         inCombat = true;
-        speed = 0.7f;
+        speed = 1f;
         if (EdgeCheck())
         {
             MoveInDirection();
